@@ -6,21 +6,24 @@ CPP = xtensa-lx106-elf-cpp
 OBJCOPY = xtensa-lx106-elf-objcopy
 
 #Define file paths
+LIBFILENAME=libribanesp8266.a
 SRCDIR=./src
+INCDIR=./include
 OBJDIR := .obj
 LDIR=../lib
 LIBS=-lfreertos
 
 #Define each object to be created
-OBJS := $(addprefix $(OBJDIR)/,gpio.o test.o)
+OBJS := $(addprefix $(OBJDIR)/,gpio.o uart.o)
 
 #Define compiler and linker flags
-CFLAGS=-c -Wall -DICACHE_FLASH -I./include -I../include -I../include/espressif -I../include/lwip -I../include/lwip/ipv4 -I../include/lwip/ipv6 -I../extra_include -I../include/freertos/
+CFLAGS=-c -Wall -mlongcalls -DICACHE_FLASH -I./include -I../include -I../include/espressif -I../include/lwip -I../include/lwip/ipv4 -I../include/lwip/ipv6 -I../extra_include -I../include/freertos/
 LDFLAGS= 
 
 #This is the main target to create the library
 all: $(OBJS)
-	$(AR) rcs $(LDIR)/libribanesp8266.a $(OBJS)
+	$(AR) rcs ./lib/$(LIBFILENAME) $(OBJS)
+	-cp  ./lib/$(LIBFILENAME) $(LDIR)
 
 #Rule to build each object file from its source file
 $(OBJDIR)/%.o : $(SRCDIR)/%.c
@@ -32,9 +35,20 @@ $(OBJS): | $(OBJDIR)
 #Rule to create object directory
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
+	mkdir -p ./lib
 
+#Rule to create wiki documentation from javadoc comments
+docs:
+#	javadoc2markdown $< > ./wiki/`basename -s .h $< | tr '[a-z]' '[A-Z]'`-Documentation.md 
+	javadoc2markdown $(INCDIR)/gpio.h > ./wiki/GPI-Documentation.md
+	javadoc2markdown $(INCDIR)/uart.h > ./wiki/UART-Documentation.md
+	javadoc2markdown $(INCDIR)/esp.h > ./wiki/ESP-Documentation.md
+	
 .PHONY : clean
 
 #Rule to clean (remove) object directory
 clean:
 	-rm -rf $(OBJDIR) 
+	-rm -rf ./lib
+	-rm -f $(LDIR)/$(LIBFILENAME)
+	

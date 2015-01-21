@@ -20,7 +20,7 @@
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.Cygwin_PE" id="cdt.managedbuild.target.gnu.platform.cygwin.base.592580742" name="Debug Platform" osList="win32" superClass="cdt.managedbuild.target.gnu.platform.cygwin.base"/>
 							<builder id="cdt.managedbuild.target.gnu.builder.cygwin.base.1856628218" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.cygwin.base"/>
 							<tool id="cdt.managedbuild.tool.gnu.assembler.cygwin.base.31735824" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.cygwin.base">
-								<option id="gnu.both.asm.option.include.paths.825539039" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath"/>
+								<option id="gnu.both.asm.option.include.paths.825539039" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths"/>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.2010433348" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.archiver.cygwin.base.1619776739" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.cygwin.base"/>
@@ -28,8 +28,11 @@
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.cygwin.1988016290" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input.cygwin"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.cygwin.base.277226633" name="Cygwin C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.cygwin.base">
-								<option id="gnu.c.compiler.option.include.paths.89624018" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+								<option id="gnu.c.compiler.option.include.paths.89624018" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="../../include"/>
+									<listOptionValue builtIn="false" value="../../include/espressif"/>
+									<listOptionValue builtIn="false" value="../../include/lwip"/>
+									<listOptionValue builtIn="false" value="../../include/lwip/ipv4"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.cygwin.1582019236" superClass="cdt.managedbuild.tool.gnu.c.compiler.input.cygwin"/>
 							</tool>
@@ -51,7 +54,11 @@
 		<project id="riban ESP8266 library.null.1021955256" name="riban ESP8266 library"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Default">
+			<resource resourceType="PROJECT" workspacePath="/ribanesp8266"/>
+		</configuration>
+	</storageModule>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.toolchain.gnu.cygwin.base.2120590147;cdt.managedbuild.toolchain.gnu.cygwin.base.2120590147.1675655431;cdt.managedbuild.tool.gnu.cpp.compiler.cygwin.base.1452084502;cdt.managedbuild.tool.gnu.cpp.compiler.input.cygwin.1988016290">
@@ -60,5 +67,25 @@
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.toolchain.gnu.cygwin.base.2120590147;cdt.managedbuild.toolchain.gnu.cygwin.base.2120590147.1675655431;cdt.managedbuild.tool.gnu.c.compiler.cygwin.base.277226633;cdt.managedbuild.tool.gnu.c.compiler.input.cygwin.1582019236">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
+		<buildTargets>
+			<target name="Build Library" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>make</buildCommand>
+				<buildArguments/>
+				<buildTarget>all</buildTarget>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>true</useDefaultCommand>
+				<runAllBuilders>true</runAllBuilders>
+			</target>
+			<target name="all" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>make</buildCommand>
+				<buildArguments/>
+				<buildTarget>all</buildTarget>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>true</useDefaultCommand>
+				<runAllBuilders>true</runAllBuilders>
+			</target>
+		</buildTargets>
 	</storageModule>
 </cproject>
