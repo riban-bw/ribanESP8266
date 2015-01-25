@@ -1,3 +1,6 @@
+#Define name of library
+LIBFILENAME = libribanesp8266.a
+
 #Define toolchain executeables
 AR = xtensa-lx106-elf-ar
 CC = xtensa-lx106-elf-cc
@@ -6,15 +9,13 @@ CPP = xtensa-lx106-elf-cpp
 OBJCOPY = xtensa-lx106-elf-objcopy
 
 #Define file paths
-LIBFILENAME=libribanesp8266.a
 SRCDIR=./src
-INCDIR=./include
 OBJDIR := .obj
 LDIR=../lib
 LIBS=-lfreertos
 
 #Define each object to be created
-OBJS := $(addprefix $(OBJDIR)/,gpio.o uart.o)
+OBJS := $(addprefix $(OBJDIR)/,esp.o gpio.o uart.o)
 
 #Define compiler and linker flags
 CFLAGS=-c -Wall -mlongcalls -DICACHE_FLASH -I./include -I../include -I../include/espressif -I../include/lwip -I../include/lwip/ipv4 -I../include/lwip/ipv6 -I../extra_include -I../include/freertos/
@@ -24,7 +25,7 @@ LDFLAGS=
 all: $(OBJS)
 	$(AR) rcs ./lib/$(LIBFILENAME) $(OBJS)
 	-cp  ./lib/$(LIBFILENAME) $(LDIR)
-
+	
 #Rule to build each object file from its source file
 $(OBJDIR)/%.o : $(SRCDIR)/%.c
 	$(COMPILE.c) $(OUTPUT_OPTION) $<
