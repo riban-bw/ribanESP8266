@@ -39,11 +39,11 @@ $(OBJDIR):
 	mkdir -p ./lib
 
 #Rule to create wiki documentation from javadoc comments
-docs:
+docs: ./wiki/*.md
 #	javadoc2markdown $< > ./wiki/`basename -s .h $< | tr '[a-z]' '[A-Z]'`-Documentation.md 
-	javadoc2markdown $(INCDIR)/gpio.h > ./wiki/GPI-Documentation.md
-	javadoc2markdown $(INCDIR)/uart.h > ./wiki/UART-Documentation.md
-	javadoc2markdown $(INCDIR)/esp.h > ./wiki/ESP-Documentation.md
+	javadoc2markdown ./include/gpio.h > ./wiki/GPI-Documentation.md
+	javadoc2markdown ./include/uart.h > ./wiki/UART-Documentation.md
+	javadoc2markdown ./include/esp.h > ./wiki/ESP-Documentation.md
 	
 .PHONY : clean
 

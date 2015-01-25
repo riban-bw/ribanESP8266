@@ -1,8 +1,5 @@
 #include "esp_common.h"
-
 #include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "freertos/queue.h"
 #include "esp.h"
 
 uint32_t ICACHE_FLASH_ATTR readReg(uint32_t nRegister)
@@ -27,10 +24,10 @@ void ICACHE_FLASH_ATTR setRegBits(uint32_t nRegister, uint32_t nMask)
 
 void ICACHE_FLASH_ATTR setRegBitsShifted(uint32_t nRegister, uint32_t nValue, uint32_t nMask, uint8_t nShift)
 {
-	uint32_t nRealValue = readReg(nRegister);
+	uint32_t nReadValue = readReg(nRegister);
 	uint32_t nRealMask = ~(nMask << nShift);
-	nRealValue = (nValue << nShift);
-	writeReg(nRegister, (nRealValue & nRealMask) | nRealValue);
+	uint32_t nRealValue = (nValue << nShift);
+	writeReg(nRegister, (nReadValue & nRealMask) | nRealValue);
 }
 
 uint32_t ICACHE_FLASH_ATTR getRegBitsShifted(uint32_t nRegister, uint32_t nMask, uint8_t nShift)
@@ -42,8 +39,8 @@ uint32_t ICACHE_FLASH_ATTR getRegBitsShifted(uint32_t nRegister, uint32_t nMask,
 
 void ICACHE_FLASH_ATTR selectFunction(uint32_t nRegister, uint32_t nFunction)
 {
-    clearRegBits(nRegister, (PERIPHS_IO_MUX_FUNC << PERIPHS_IO_MUX_FUNC_S));
-    setRegBits(nRegister, (((nFunction & BIT2) << 2) | (nFunction & 0x3)) << PERIPHS_IO_MUX_FUNC_S);
+    setRegBitsShifted(nRegister, 0x00, PERIPHS_IO_MUX_FUNC, PERIPHS_IO_MUX_FUNC_S);
+    setRegBitsShifted(nRegister, ((nFunction & BIT2) << 2), (nFunction & 0x3), PERIPHS_IO_MUX_FUNC_S);
 }
 
 void ICACHE_FLASH_ATTR enableInterrupts(uint8_t nType)
