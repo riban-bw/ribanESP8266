@@ -9,16 +9,17 @@ CPP = xtensa-lx106-elf-cpp
 OBJCOPY = xtensa-lx106-elf-objcopy
 
 #Define file paths
+ESPSDK = ..
 SRCDIR=./src
 OBJDIR := .obj
-LDIR=../lib
+LDIR=$(ESPSDK)/lib
 LIBS=-lfreertos
 
 #Define each object to be created
 OBJS := $(addprefix $(OBJDIR)/,esp.o gpio.o uart.o)
 
 #Define compiler and linker flags
-CFLAGS=-c -Wall -mlongcalls -DICACHE_FLASH -I./include -I../include -I../include/espressif -I../include/lwip -I../include/lwip/ipv4 -I../include/lwip/ipv6 -I../extra_include -I../include/freertos/
+CFLAGS=-c -Wall -mlongcalls -DICACHE_FLASH -I./include -I$(ESPSDK)/include -I$(ESPSDK)/include/espressif -I$(ESPSDK)/include/lwip -I$(ESPSDK)/include/lwip/ipv4 -I$(ESPSDK)/include/lwip/ipv6 -I$(ESPSDK)/extra_include -I$(ESPSDK)/include/freertos/
 LDFLAGS= 
 
 #This is the main target to create the library

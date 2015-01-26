@@ -11,7 +11,7 @@
 
 void ICACHE_FLASH_ATTR gpiSetMode(uint8 nPin, GPI_MODE_TYPE nMode)
 {
-    uint32 nMask = (1 << nPin);
+    uint32 nMask = (BIT(nPin));
     uint32 nValue;
 
     if(GPI_MODE_INPUT == nMode)
@@ -19,7 +19,6 @@ void ICACHE_FLASH_ATTR gpiSetMode(uint8 nPin, GPI_MODE_TYPE nMode)
     else if(GPI_MODE_OUTPUT == nMode)
         writeReg(PERIPHS_GPIO_BASEADDR + GPIO_ENABLE_W1TS_ADDRESS, nMask);
     //!@todo Set rest of input and output modes early
-    return; //!@todo Remove early return
 
     gpiSelectBank(nPin);
     clearRegBits(PERIPHS_IO_MUX_PULLUP, nMask);
@@ -55,7 +54,7 @@ void ICACHE_FLASH_ATTR gpiSetMode(uint8 nPin, GPI_MODE_TYPE nMode)
             portENTER_CRITICAL();
             nValue = readReg(PERIPHS_GPIO_BASEADDR + GPIO_PIN_ADDR(nPin));
             nValue &= (~GPIO_PIN_SOURCE_MASK);
-            nValue |= (0x1 << GPIO_PIN_SOURCE_LSB);
+            nValue |= (BIT(GPIO_PIN_SOURCE_LSB));
             writeReg(PERIPHS_GPIO_BASEADDR + GPIO_PIN_ADDR(nPin), GPIO_PIN_REG(nPin));
             writeReg(PERIPHS_GPIO_BASEADDR + GPIO_SIGMA_DELTA_ADDRESS, SIGMA_DELTA_ENABLE);
             portEXIT_CRITICAL();
@@ -97,10 +96,10 @@ void ICACHE_FLASH_ATTR gpiWrite(uint8 nPin, bool bValue)
 }
 
 
-void ICACHE_FLASH_ATTR gpiRegisterIntHandler(void *pFunction)
+void ICACHE_FLASH_ATTR gpiSetInterruptHandler(void *pFunction)
 {
 	//!@todo Implement gpiRegisterIntHandler
-//    _xt_isr_attach(ETS_GPIO_INUM, pFunction);
+    _xt_isr_attach(ETS_GPIO_INUM, pFunction);
 }
 
 void ICACHE_FLASH_ATTR gpiAckInt()

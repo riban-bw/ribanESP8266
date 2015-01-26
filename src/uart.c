@@ -108,22 +108,14 @@ void ICACHE_FLASH_ATTR uartSetBaudrate(UART_Port nUart, uint32_t nRate)
 	if(0 == nRate)
 	{
 		//Auto-baud
+		//!@todo Auto-baud does not seem to work
 		setRegBits(UART_AUTOBAUD(nUart), UART_AUTOBAUD_EN);
 		//!@todo Configure auto-baud glitch filter
 	}
 	else
 	{
 		clearRegBits(UART_AUTOBAUD(nUart), UART_AUTOBAUD_EN);
-		//!@todo uartSetBaudrate not working?
 		writeReg(UART_CLKDIV(nUart), UART_CLK_FREQ / nRate);
-	//    uart_div_modify(nUart, UART_CLK_FREQ / nRate);
-	//	uint32_t a5 = uart_buff_switch[4] * nUart + uart_buff_switch[8];
-	//    uint32_t a5 = 0xf00 * nUart + 0x60000000;
-	//	writeReg(a5 + 0x214, UART_CLK_FREQ / nRate);
-	//	a7 = *(0x220 + a5) | uart_buff_switch.[0x0C];
-	//	*(0x220 + a5) = a7;
-	//	a4 = *(0x220 + a5) & uart_buff_switch.[0x10];
-	//	*(a5 + 0x220) = a4;
 	}
 }
 

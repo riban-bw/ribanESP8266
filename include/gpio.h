@@ -72,36 +72,36 @@
 
 typedef enum
 {
-    GPI_INTR_DISABLE   = 0,	//Disable interrupts
-    GPI_INTR_POSEDGE,       	//Enable interrupt on rising edge
-    GPI_INTR_NEGEDGE,   	    //Enable interrupt on falling edge
-    GPI_INTR_ANYEGDE,           //Enable interrupt on rising and falling edges
-    GPI_INTR_LOLEVEL,   	    //Enable interrupt on low level
-    GPI_INTR_HILEVEL,       	//Enable interrupt on high level
+    GPI_INTR_DISABLE	= 0,	//Disable interrupts
+    GPI_INTR_POSEDGE,			//Enable interrupt on rising edge
+    GPI_INTR_NEGEDGE,			//Enable interrupt on falling edge
+    GPI_INTR_ANYEGDE,			//Enable interrupt on rising and falling edges
+    GPI_INTR_LOLEVEL,			//Enable interrupt on low level
+    GPI_INTR_HILEVEL,			//Enable interrupt on high level
 } GPI_INT_TYPE;
 
 typedef enum
 {
-    GPI_MODE_INPUT	    = 0x0,	//Input
-    GPI_MODE_INPUT_PULLUP, 	    //Input with internal pull-up resistor enabled
-    GPI_MODE_INPUT_PULLDOWN, 	//Input with internal pull-down resistor enabled
-    GPI_MODE_OUTPUT_OD,	        //Open drain output
-    GPI_MODE_OUTPUT,		    //Push-pull output
-    GPI_MODE_OUTPUT_PWM,   	    //Delta-Sigma PWM DAC output
+    GPI_MODE_INPUT			= 0,	//Input
+    GPI_MODE_INPUT_PULLUP,			//Input with internal pull-up resistor enabled
+    GPI_MODE_INPUT_PULLDOWN,		//Input with internal pull-down resistor enabled
+    GPI_MODE_OUTPUT_OD,				//Open drain output
+    GPI_MODE_OUTPUT,				//Push-pull output
+    GPI_MODE_OUTPUT_PWM,			//Delta-Sigma PWM DAC output
 } GPI_MODE_TYPE;
 
 typedef enum
 {
-    GPI_PULLUP_DIS     = 0,    	//Disable internal pull-up resistor
-    GPI_PULLUP_EN                  //Enable internal pull-up resistor
+    GPI_PULLUP_DIS		= 0,	//Disable internal pull-up resistor
+    GPI_PULLUP_EN				//Enable internal pull-up resistor
 } GPI_PULLUP_TYPE;
 
 typedef struct
 {
-    uint16		        PinMask;	//Bitwise mask of which GPIO pins are affected
-    GPI_MODE_TYPE	    Mode;       //Input / output mode (see GPIOMode_TypeDef)
-    GPI_PULLUP_TYPE    Pullup;     //Internal pull-up resistor state (see GPIO_Pullup_IF)
-    GPI_INT_TYPE       Interrupt;  //Interupt type (see GPIO_INT_TYPE)
+	uint16_t			PinMask;	//Bitwise mask of which GPIO pins are affected
+    GPI_MODE_TYPE		Mode;		//Input / output mode (see GPIOMode_TypeDef)
+    GPI_PULLUP_TYPE		Pullup;		//Internal pull-up resistor state (see GPIO_Pullup_IF)
+    GPI_INT_TYPE		Interrupt;	//Interupt type (see GPIO_INT_TYPE)
 } GPI_Config;
 
 /** @brief  Configure the mode of a GPI pin
@@ -133,19 +133,19 @@ uint32_t gpiReadAll();
 *   @param  bValue Value to set GPI pin to
 *   @note   Set pin to output mode before calling this function
 */
-void gpiWrite(uint8 nPin, bool bValue);
+void gpiWrite(uint8_t nPin, bool bValue);
 
 /** @brief  Enable internal pull-up resistor
 *   @param  nPin GPI pin
 *   @todo   Do we require the ability to change the pull-up resistor configuration separate to configuring the pin mode?
 */
-void gpiEnablePullup(uint8 nPin);
+void gpiEnablePullup(uint8_t nPin);
 
 /** @brief  Disable internal pull-up resistor
 *   @param  nPin GPI pin
 *   @todo   Do we require the ability to change the pull-up resistor configuration separate to configuring the pin mode?
 */
-void gpiDisablePullup(uint8 nPin);
+void gpiDisablePullup(uint8_t nPin);
 
 /** @brief  Select GPI bank
 *   @param  nPin GPI pin to select bank for
@@ -159,7 +159,7 @@ void gpiSelectBank(uint8_t nPin);
 *   @note   Each interrupt must be acknowledged by calling gpiAckInt. No further events will be generated until this is done.
 *   @note   Handler accepts one argument: uint32_t which is a bitwise mask of pending GPI interrupts (one bit per pin)
 */
-void gpiRegisterIntHandler(void *pFunction);
+void gpiSetInterruptHandler(void *pFunction);
 
 /** @brief  Acknowledge interrupt
 *	@note	Must call this function after a GPI interrupt before further GPI interrupts will occur
