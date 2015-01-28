@@ -32,7 +32,7 @@ void ICACHE_FLASH_ATTR uartSendChar(UART_Port nUart, char nChar)
     writeReg(UART_FIFO(nUart) , nChar);
 }
 
-/*	Handle UART receive interrupts
+/*	Handle UART receive interrupts, dispatching event to tasks if necessary
 *	@todo Check out this function
 */
 //LOCAL void ICACHE_FLASH_ATTR uart_rx_intr_handler_ssc(void)
@@ -252,7 +252,8 @@ void ICACHE_FLASH_ATTR uartInit(UART_Port nUart, uint32_t nBitrate, void* pEvent
 
     if(pEventHandler)
     {
-    	uartEnableInterrupts(nUart, UART_RXFIFO_TOUT_INT_ENA | UART_FRM_ERR_INT_ENA | UART_RXFIFO_FULL_INT_ENA | UART_TXFIFO_EMPTY_INT_ENA);
+    	uartEnableInterrupts(nUart, UART_RXFIFO_TOUT_INT_ENA | UART_FRM_ERR_INT_ENA | UART_RXFIFO_FULL_INT_ENA);
+//    	uartEnableInterrupts(nUart, UART_RXFIFO_TOUT_INT_ENA);
         uartSetRxFifoFullThreshold(nUart, 10);
         uartSetRxTimeoutThreshold(nUart, 2);
         uartSetTxFifoEmptyThreshold(nUart, 20);
@@ -263,7 +264,7 @@ void ICACHE_FLASH_ATTR uartInit(UART_Port nUart, uint32_t nBitrate, void* pEvent
 
 void ICACHE_FLASH_ATTR uartSend(UART_Port nUart, uint8_t *pBuffer, uint16_t nLen)
 {
-  uint16 i;
+  uint16_t i;
   for(i = 0; i < nLen; i++)
   {
     uartSendChar(nUart, pBuffer[i]);

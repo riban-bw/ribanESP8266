@@ -9,7 +9,7 @@ CPP = xtensa-lx106-elf-cpp
 OBJCOPY = xtensa-lx106-elf-objcopy
 
 #Define file paths
-ESPSDK = ..
+ESPSDK = ../esp_iot_rtos_sdk
 SRCDIR=./src
 OBJDIR := .obj
 LDIR=$(ESPSDK)/lib
@@ -19,12 +19,14 @@ LIBS=-lfreertos
 OBJS := $(addprefix $(OBJDIR)/,esp.o gpio.o uart.o)
 
 #Define compiler and linker flags
-CFLAGS=-c -Wall -mlongcalls -DICACHE_FLASH -I./include -I$(ESPSDK)/include -I$(ESPSDK)/include/espressif -I$(ESPSDK)/include/lwip -I$(ESPSDK)/include/lwip/ipv4 -I$(ESPSDK)/include/lwip/ipv6 -I$(ESPSDK)/extra_include -I$(ESPSDK)/include/freertos/
-LDFLAGS= 
+INCLUDES = -I./include -I$(ESPSDK)/include -I$(ESPSDK)/include/espressif -I$(ESPSDK)/include/lwip -I$(ESPSDK)/include/lwip/ipv4 -I$(ESPSDK)/include/lwip/ipv6 -I$(ESPSDK)/extra_include -I$(ESPSDK)/include/freertos/
+CFLAGS = -c -O2 -Wpointer-arith -Wundef -Werror -Wl,-EL -fno-inline-functions -nostdlib -mlongcalls -mtext-section-literals -DICACHE_FLASH $(INCLUDES)
+
+LDFLAGS =
 
 #This is the main target to create the library
 all: $(OBJS)
-	$(AR) rcs ./lib/$(LIBFILENAME) $(OBJS)
+	$(AR) ru ./lib/$(LIBFILENAME) $(OBJS)
 	-cp  ./lib/$(LIBFILENAME) $(LDIR)
 	
 #Rule to build each object file from its source file

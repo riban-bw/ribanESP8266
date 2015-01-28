@@ -21,23 +21,24 @@ void ICACHE_FLASH_ATTR gpiSetMode(uint8 nPin, GPI_MODE_TYPE nMode)
     //!@todo Set rest of input and output modes early
 
     gpiSelectBank(nPin);
-    clearRegBits(PERIPHS_IO_MUX_PULLUP, nMask);
-    clearRegBits(PERIPHS_IO_MUX_PULLDWN, nMask);
-
+    clearRegBits(GPIO_PIN_REG(nPin), PERIPHS_IO_MUX_PULLUP);
+    clearRegBits(GPIO_PIN_REG(nPin), PERIPHS_IO_MUX_PULLDWN);
     switch(nMode)
     {
         case GPI_MODE_INPUT:
+        	//!@todo This is a repeat of above
             writeReg(PERIPHS_GPIO_BASEADDR + GPIO_ENABLE_W1TC_ADDRESS, nMask);
             break;
         case GPI_MODE_INPUT_PULLUP:
             writeReg(PERIPHS_GPIO_BASEADDR + GPIO_ENABLE_W1TC_ADDRESS, nMask);
-            setRegBits(PERIPHS_IO_MUX_PULLUP, nMask);
+            setRegBits(GPIO_PIN_REG(nPin), PERIPHS_IO_MUX_PULLUP);
             break;
         case GPI_MODE_INPUT_PULLDOWN:
             writeReg(PERIPHS_GPIO_BASEADDR + GPIO_ENABLE_W1TC_ADDRESS, nMask);
-            setRegBits(PERIPHS_IO_MUX_PULLDWN, nMask);
+            setRegBits(GPIO_PIN_REG(nPin), PERIPHS_IO_MUX_PULLDWN);
             break;
         case GPI_MODE_OUTPUT:
+        	//!@todo This is a repeat of above
             writeReg(PERIPHS_GPIO_BASEADDR + GPIO_ENABLE_W1TS_ADDRESS, nMask);
             break;
         case GPI_MODE_OUTPUT_OD:

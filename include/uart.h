@@ -178,7 +178,7 @@ void uartSetTxFifoEmptyThreshold(UART_Port nUart, uint32_t nThreshold);
 
 /**	@brief	Set threshold for receive buffer full interrupt to trigger
 * 	@param	nUart UART number (0 | 1)
-* 	@param	nThreshold Quantity of free bytes in buffer to trigger event
+* 	@param	nThreshold Quantity of bytes in buffer to trigger event
 */
 void uartSetRxFifoFullThreshold(UART_Port nUart, uint32_t nThreshold);
 

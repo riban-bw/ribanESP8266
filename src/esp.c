@@ -45,10 +45,10 @@ void ICACHE_FLASH_ATTR selectFunction(uint32_t nRegister, uint32_t nFunction)
 
 void ICACHE_FLASH_ATTR enableInterrupts(uint8_t nType)
 {
-	_xt_isr_unmask(1 << nType);
+	_xt_isr_unmask(BIT(nType));
 }
 
 void ICACHE_FLASH_ATTR disableInterrupts(uint8_t nType)
 {
-	_xt_isr_mask(1 << nType);
+	_xt_isr_mask(BIT(nType));
 }
