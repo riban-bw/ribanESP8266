@@ -254,7 +254,7 @@ void ICACHE_FLASH_ATTR uartInit(UART_Port nUart, uint32_t nBitrate, void* pEvent
     {
     	uartEnableInterrupts(nUart, UART_RXFIFO_TOUT_INT_ENA | UART_FRM_ERR_INT_ENA | UART_RXFIFO_FULL_INT_ENA);
 //    	uartEnableInterrupts(nUart, UART_RXFIFO_TOUT_INT_ENA);
-        uartSetRxFifoFullThreshold(nUart, 10);
+        uartSetRxFifoFullThreshold(nUart, 1);
         uartSetRxTimeoutThreshold(nUart, 2);
         uartSetTxFifoEmptyThreshold(nUart, 20);
     	uartSetInterruptHandler(pEventHandler);

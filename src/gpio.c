@@ -14,32 +14,31 @@ void ICACHE_FLASH_ATTR gpiSetMode(uint8 nPin, GPI_MODE_TYPE nMode)
     uint32 nMask = (BIT(nPin));
     uint32 nValue;
 
-    if(GPI_MODE_INPUT == nMode)
-        writeReg(PERIPHS_GPIO_BASEADDR + GPIO_ENABLE_W1TC_ADDRESS, nMask);
-    else if(GPI_MODE_OUTPUT == nMode)
-        writeReg(PERIPHS_GPIO_BASEADDR + GPIO_ENABLE_W1TS_ADDRESS, nMask);
-    //!@todo Set rest of input and output modes early
-
+    switch(nMode)
+    {
+		case GPI_MODE_INPUT:
+		case GPI_MODE_INPUT_PULLDOWN:
+		case GPI_MODE_INPUT_PULLUP:
+	        writeReg(PERIPHS_GPIO_BASEADDR + GPIO_ENABLE_W1TC_ADDRESS, nMask);
+	        break;
+		case GPI_MODE_OUTPUT:
+		case GPI_MODE_OUTPUT_OD:
+		case GPI_MODE_OUTPUT_PWM:
+			writeReg(PERIPHS_GPIO_BASEADDR + GPIO_ENABLE_W1TS_ADDRESS, nMask);
+			break;
+		default:
+			return; //Mode not defined
+    }
     gpiSelectBank(nPin);
     clearRegBits(GPIO_PIN_REG(nPin), PERIPHS_IO_MUX_PULLUP);
     clearRegBits(GPIO_PIN_REG(nPin), PERIPHS_IO_MUX_PULLDWN);
     switch(nMode)
     {
-        case GPI_MODE_INPUT:
-        	//!@todo This is a repeat of above
-            writeReg(PERIPHS_GPIO_BASEADDR + GPIO_ENABLE_W1TC_ADDRESS, nMask);
-            break;
         case GPI_MODE_INPUT_PULLUP:
-            writeReg(PERIPHS_GPIO_BASEADDR + GPIO_ENABLE_W1TC_ADDRESS, nMask);
             setRegBits(GPIO_PIN_REG(nPin), PERIPHS_IO_MUX_PULLUP);
             break;
         case GPI_MODE_INPUT_PULLDOWN:
-            writeReg(PERIPHS_GPIO_BASEADDR + GPIO_ENABLE_W1TC_ADDRESS, nMask);
             setRegBits(GPIO_PIN_REG(nPin), PERIPHS_IO_MUX_PULLDWN);
-            break;
-        case GPI_MODE_OUTPUT:
-        	//!@todo This is a repeat of above
-            writeReg(PERIPHS_GPIO_BASEADDR + GPIO_ENABLE_W1TS_ADDRESS, nMask);
             break;
         case GPI_MODE_OUTPUT_OD:
             //!@todo Check open drain output works
