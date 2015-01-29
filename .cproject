@@ -29,12 +29,13 @@
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.cygwin.base.277226633" name="Cygwin C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.cygwin.base">
 								<option id="gnu.c.compiler.option.include.paths.89624018" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value=".././include"/>
 									<listOptionValue builtIn="false" value="&quot;${ESP8266SDK}/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ESP8266SDK}/include/espressif&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ESP8266SDK}/include/freertos&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ESP8266SDK}/include/lwip&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ESP8266SDK}/include/lwip/ipv4&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ESP8266SDK}/ribanesp8266/include&quot;"/>
+									<listOptionValue builtIn="false" value="../../ribanesp8266/include"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.cygwin.1582019236" superClass="cdt.managedbuild.tool.gnu.c.compiler.input.cygwin"/>
 							</tool>
@@ -49,7 +50,7 @@
 					</folderInfo>
 					<fileInfo id="cdt.managedbuild.toolchain.gnu.cygwin.base.2120590147.43111810" name="uart.h" rcbsApplicability="disable" resourcePath="include/uart.h" toolsToInvoke=""/>
 					<fileInfo id="cdt.managedbuild.toolchain.gnu.cygwin.base.2120590147.817010310" name="esp.h" rcbsApplicability="disable" resourcePath="include/esp.h" toolsToInvoke=""/>
-					<fileInfo id="cdt.managedbuild.toolchain.gnu.cygwin.base.2120590147.2078784451" name="gpio.h" rcbsApplicability="disable" resourcePath="include/gpio.h" toolsToInvoke=""/>
+					<fileInfo id="cdt.managedbuild.toolchain.gnu.cygwin.base.2120590147.2078784451" name="gpio.h" rcbsApplicability="disable" resourcePath="include/gpi.h" toolsToInvoke=""/>
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>

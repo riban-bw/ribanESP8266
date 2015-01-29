@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "c_types.h"
 #include "esp8266/esp8266.h"
 #include "esp8266/gpio_register.h"
 
@@ -106,13 +107,14 @@ typedef struct
 
 /** @brief  Configure the mode of a GPI pin
 *   @param  nPin Index of the GPI pin
-*   @param  nMode Mode to set (GPIO_MODE_INPUT | GPIO_MODE_OUTPUT_OD | GPIO_MODE_OUTPUT | GPIO_MODE_OUTPUT_PWM)
+*   @param  nMode Mode to set (see GPI_MODE_TYPE)
+*   @todo	GPI_MODE_INPUT_PULLDOWN does not work. Reported to Espressif on github issue #16
 */
 void gpiSetMode(uint8_t nPin, GPI_MODE_TYPE nMode);
 
 /** @brief  Set the interrupt type for a GPI pin
 *   @param  nPin GPI pin to configure
-*   @param  nType Interrupt type (GPI_INTR_DISABLE | GPI_INTR_POSEDGE | GPI_INTR_NEGEDGE | GPI_INTR_ANYEGDE | GPI_INTR_LOLEVEL | GPI_INTR_HILEVEL)
+*   @param  nType Interrupt type (see GPI_INT_TYPE)
 *   @todo   Should gpiSetInterrupt be renamed to avoid ambiguity with configuring the overall interrupt mechanism and handlers?
 */
 void gpiSetInterrupt(uint32_t nPin, GPI_INT_TYPE nType);
@@ -121,7 +123,7 @@ void gpiSetInterrupt(uint32_t nPin, GPI_INT_TYPE nType);
 *   @param  nPin Index of the GPI pin
 *   @return <i>bool</i> True if GPI pin is high
 */
-bool gpiRead(uint8 nPin);
+bool gpiRead(uint8_t nPin);
 
 /** @brief  Get the value of all GPI input pins
 *   @return <i>uint32</i> Value of all GPI inputs presented as bitwise flags
@@ -146,13 +148,6 @@ void gpiEnablePullup(uint8_t nPin);
 *   @todo   Do we require the ability to change the pull-up resistor configuration separate to configuring the pin mode?
 */
 void gpiDisablePullup(uint8_t nPin);
-
-/** @brief  Select GPI bank
-*   @param  nPin GPI pin to select bank for
-*   @note   Used internally by GPI driver
-*   @todo   Should this be more generic - outside GPI driver?
-*/
-void gpiSelectBank(uint8_t nPin);
 
 /** @brief  Register an event handler for GPI interrupts
 *   @param  pFunction Pointer to the event handler (callback) function

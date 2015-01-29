@@ -40,7 +40,9 @@ uint32_t ICACHE_FLASH_ATTR getRegBitsShifted(uint32_t nRegister, uint32_t nMask,
 void ICACHE_FLASH_ATTR selectFunction(uint32_t nRegister, uint32_t nFunction)
 {
     clearRegBits(nRegister, PERIPHS_IO_MUX_FUNC << PERIPHS_IO_MUX_FUNC_S);
-    setRegBitsShifted(nRegister, nFunction, PERIPHS_IO_MUX_FUNC, PERIPHS_IO_MUX_FUNC_S);
+    //The pin function is split across bits 0, 1 & 4 (after shifting, actually bots 4, 5 & 8)
+    uint32_t nValue = (nFunction & 0x03) | ((nFunction & BIT2) << 2);
+    setRegBitsShifted(nRegister, nValue, PERIPHS_IO_MUX_FUNC, PERIPHS_IO_MUX_FUNC_S);
 }
 
 void ICACHE_FLASH_ATTR enableInterrupts(uint8_t nType)

@@ -7,37 +7,52 @@
 #include "espressif/esp_common.h"
 #include "freertos/portmacro.h"
 #include "esp.h"
-#include "gpio.h"
+#include "gpi.h"
 
 void ICACHE_FLASH_ATTR gpiSetMode(uint8 nPin, GPI_MODE_TYPE nMode)
 {
-    uint32 nMask = (BIT(nPin));
-    uint32 nValue;
-
     switch(nMode)
     {
 		case GPI_MODE_INPUT:
 		case GPI_MODE_INPUT_PULLDOWN:
 		case GPI_MODE_INPUT_PULLUP:
-	        writeReg(PERIPHS_GPIO_BASEADDR + GPIO_ENABLE_W1TC_ADDRESS, nMask);
+			//Clear output enable bit - setting GPI to input
+	        writeReg(PERIPHS_GPIO_BASEADDR + GPIO_ENABLE_W1TC_ADDRESS, BIT(nPin));
 	        break;
 		case GPI_MODE_OUTPUT:
 		case GPI_MODE_OUTPUT_OD:
 		case GPI_MODE_OUTPUT_PWM:
-			writeReg(PERIPHS_GPIO_BASEADDR + GPIO_ENABLE_W1TS_ADDRESS, nMask);
+			//Set output enable bit - setting GPI to output
+			writeReg(PERIPHS_GPIO_BASEADDR + GPIO_ENABLE_W1TS_ADDRESS, BIT(nPin));
 			break;
 		default:
 			return; //Mode not defined
     }
-    gpiSelectBank(nPin);
+    //Set pin mode to GPI
+    switch(nPin)
+    {
+        case 0:
+        case 2:
+        case 4:
+        case 5:
+        	//Pins 0,2,4&5 GPI function is 0
+            selectFunction(GPIO_PIN_REG(nPin), 0);
+            break;
+        default:
+        	//Pins 1,3,6,7,8,9,10,11,12,13,14,15&16 GPI function is 3
+            selectFunction(GPIO_PIN_REG(nPin), 3);
+    }
+    //Disable internal pull-up and pull-down resistors
     clearRegBits(GPIO_PIN_REG(nPin), PERIPHS_IO_MUX_PULLUP);
     clearRegBits(GPIO_PIN_REG(nPin), PERIPHS_IO_MUX_PULLDWN);
+    uint32_t nValue;
     switch(nMode)
     {
         case GPI_MODE_INPUT_PULLUP:
             setRegBits(GPIO_PIN_REG(nPin), PERIPHS_IO_MUX_PULLUP);
             break;
         case GPI_MODE_INPUT_PULLDOWN:
+        	printf("Enabling pull-down\n");
             setRegBits(GPIO_PIN_REG(nPin), PERIPHS_IO_MUX_PULLDWN);
             break;
         case GPI_MODE_OUTPUT_OD:
@@ -64,7 +79,7 @@ void ICACHE_FLASH_ATTR gpiSetMode(uint8 nPin, GPI_MODE_TYPE nMode)
 
 void ICACHE_FLASH_ATTR gpiSetInterrupt(uint32_t nPin, GPI_INT_TYPE nType)
 {
-    gpiSelectBank(nPin);
+    //!@todo Demo sets pin mode to GPI - should we do it?
     uint32 nValue;
 
     portENTER_CRITICAL();
@@ -149,29 +164,12 @@ void ICACHE_FLASH_ATTR gpiDisableWakeOnInt()
 
 void ICACHE_FLASH_ATTR gpiEnablePullup(uint8_t nPin)
 {
-    gpiSelectBank(nPin);
-    setRegBits(PERIPHS_IO_MUX_PULLUP, (1 << nPin));
+    setRegBits(PERIPHS_IO_MUX_PULLUP, BIT(nPin));
 }
 
 void ICACHE_FLASH_ATTR gpiDisablePullup(uint8_t nPin)
 {
-    gpiSelectBank(nPin);
-    clearRegBits(PERIPHS_IO_MUX_PULLUP, (1 << nPin));
-}
-
-void ICACHE_FLASH_ATTR gpiSelectBank(uint8_t nPin)
-{
-    switch(nPin)
-    {
-        case 0:
-        case 2:
-        case 4:
-        case 5:
-            selectFunction(GPIO_PIN_REG(nPin), 0); //!@todo Use / define constants for 0 & 3 - Constants are actually FUNC_GPIOx where x=pin.
-            break;
-        default:
-            selectFunction(GPIO_PIN_REG(nPin), 3);
-    }
+    clearRegBits(PERIPHS_IO_MUX_PULLUP, BIT(nPin));
 }
 
 void ICACHE_FLASH_ATTR gpiSetPwm(uint32_t nPin, uint16_t nFreq, uint8 nWidth)

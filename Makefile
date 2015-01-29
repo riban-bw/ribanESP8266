@@ -16,7 +16,7 @@ LDIR=$(ESPSDK)/lib
 LIBS=-lfreertos
 
 #Define each object to be created
-OBJS := $(addprefix $(OBJDIR)/,esp.o gpio.o uart.o)
+OBJS := $(addprefix $(OBJDIR)/,esp.o gpi.o uart.o)
 
 #Define compiler and linker flags
 INCLUDES = -I./include -I$(ESPSDK)/include -I$(ESPSDK)/include/espressif -I$(ESPSDK)/include/lwip -I$(ESPSDK)/include/lwip/ipv4 -I$(ESPSDK)/include/lwip/ipv6 -I$(ESPSDK)/extra_include -I$(ESPSDK)/include/freertos/
