@@ -123,7 +123,7 @@ void ICACHE_FLASH_ATTR uartSetFlowCtrl(UART_Port nUart, UART_HwFlowCtrl nFlow, u
 {
     if (nFlow & UART_HardwareFlowControl_RTS)
     {
-        selectFunction(PERIPHS_IO_MUX_MTDO_U, FUNC_U0RTS);
+        setPinFunction(15, FUNC_UART0_RTS);
         setRegBitsShifted(UART_CONF1(nUart), nRxThreshold, UART_RX_FLOW_THRHD, UART_RX_FLOW_THRHD_S);
         setRegBits(UART_CONF1(nUart), UART_RX_FLOW_EN);
     }
@@ -134,7 +134,7 @@ void ICACHE_FLASH_ATTR uartSetFlowCtrl(UART_Port nUart, UART_HwFlowCtrl nFlow, u
 
     if (nFlow & UART_HardwareFlowControl_CTS)
     {
-        selectFunction(PERIPHS_IO_MUX_MTCK_U, FUNC_UART0_CTS);
+        setPinFunction(13, FUNC_UART0_CTS);
         setRegBits(UART_CONF0(nUart), UART_TX_FLOW_EN);
     }
     else

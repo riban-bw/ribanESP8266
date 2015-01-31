@@ -1,4 +1,3 @@
-#include "esp_common.h"
 #include "freertos/FreeRTOS.h"
 #include "esp.h"
 
@@ -37,12 +36,12 @@ uint32_t ICACHE_FLASH_ATTR getRegBitsShifted(uint32_t nRegister, uint32_t nMask,
 	return (nValue >> nShift);
 }
 
-void ICACHE_FLASH_ATTR selectFunction(uint32_t nRegister, uint32_t nFunction)
+void ICACHE_FLASH_ATTR setPinFunction(uint8_t nPin, uint32_t nFunction)
 {
-    clearRegBits(nRegister, PERIPHS_IO_MUX_FUNC << PERIPHS_IO_MUX_FUNC_S);
+    clearRegBits(IOMUX_CONFIG_REG(nPin), IOMUX_FUNCTION_MASK);
     //The pin function is split across bits 0, 1 & 4 (after shifting, actually bots 4, 5 & 8)
     uint32_t nValue = (nFunction & 0x03) | ((nFunction & BIT2) << 2);
-    setRegBitsShifted(nRegister, nValue, PERIPHS_IO_MUX_FUNC, PERIPHS_IO_MUX_FUNC_S);
+    setRegBitsShifted(IOMUX_CONFIG_REG(nPin), nValue, PERIPHS_IO_MUX_FUNC, PERIPHS_IO_MUX_FUNC_S);
 }
 
 void ICACHE_FLASH_ATTR enableInterrupts(uint8_t nType)

@@ -7,78 +7,87 @@
 #pragma once
 
 #include "c_types.h"
-#include "esp8266/esp8266.h"
-#include "esp8266/gpio_register.h"
 
-//Bitwise flags for each pin
-#define GPIO_PINMASK_0              (BIT(0))  /* Pin 0 selected */
-#define GPIO_PINMASK_1              (BIT(1))  /* Pin 1 selected */
-#define GPIO_PINMASK_2              (BIT(2))  /* Pin 2 selected */
-#define GPIO_PINMASK_3              (BIT(3))  /* Pin 3 selected */
-#define GPIO_PINMASK_4              (BIT(4))  /* Pin 4 selected */
-#define GPIO_PINMASK_5              (BIT(5))  /* Pin 5 selected */
-#define GPIO_PINMASK_6              (BIT(6))  /* Pin 6 selected */
-#define GPIO_PINMASK_7              (BIT(7))  /* Pin 7 selected */
-#define GPIO_PINMASK_8              (BIT(8))  /* Pin 8 selected */
-#define GPIO_PINMASK_9              (BIT(9))  /* Pin 9 selected */
-#define GPIO_PINMASK_10             (BIT(10)) /* Pin 10 selected */
-#define GPIO_PINMASK_11             (BIT(11)) /* Pin 11 selected */
-#define GPIO_PINMASK_12             (BIT(12)) /* Pin 12 selected */
-#define GPIO_PINMASK_13             (BIT(13)) /* Pin 13 selected */
-#define GPIO_PINMASK_14             (BIT(14)) /* Pin 14 selected */
-#define GPIO_PINMASK_15             (BIT(15)) /* Pin 15 selected */
-#define GPIO_PINMASK_All            (0xFFFF)  /* All pins selected */
-//IMultiplex register for each pin
-#define GPIO_PIN_REG_0          PERIPHS_IO_MUX_GPIO0_U
-#define GPIO_PIN_REG_1          PERIPHS_IO_MUX_U0TXD_U
-#define GPIO_PIN_REG_2          PERIPHS_IO_MUX_GPIO2_U
-#define GPIO_PIN_REG_3          PERIPHS_IO_MUX_U0RXD_U
-#define GPIO_PIN_REG_4          PERIPHS_IO_MUX_GPIO4_U
-#define GPIO_PIN_REG_5          PERIPHS_IO_MUX_GPIO5_U
-#define GPIO_PIN_REG_6          PERIPHS_IO_MUX_SD_CLK_U
-#define GPIO_PIN_REG_7          PERIPHS_IO_MUX_SD_DATA0_U
-#define GPIO_PIN_REG_8          PERIPHS_IO_MUX_SD_DATA1_U
-#define GPIO_PIN_REG_9          PERIPHS_IO_MUX_SD_DATA2_U
-#define GPIO_PIN_REG_10         PERIPHS_IO_MUX_SD_DATA3_U
-#define GPIO_PIN_REG_11         PERIPHS_IO_MUX_SD_CMD_U
-#define GPIO_PIN_REG_12         PERIPHS_IO_MUX_MTDI_U
-#define GPIO_PIN_REG_13         PERIPHS_IO_MUX_MTCK_U
-#define GPIO_PIN_REG_14         PERIPHS_IO_MUX_MTMS_U
-#define GPIO_PIN_REG_15         PERIPHS_IO_MUX_MTDO_U
-//Value register for each pin
-#define GPIO_PIN_REG(i) \
-    (i==0) ? GPIO_PIN_REG_0:  \
-    (i==1) ? GPIO_PIN_REG_1:  \
-    (i==2) ? GPIO_PIN_REG_2:  \
-    (i==3) ? GPIO_PIN_REG_3:  \
-    (i==4) ? GPIO_PIN_REG_4:  \
-    (i==5) ? GPIO_PIN_REG_5:  \
-    (i==6) ? GPIO_PIN_REG_6:  \
-    (i==7) ? GPIO_PIN_REG_7:  \
-    (i==8) ? GPIO_PIN_REG_8:  \
-    (i==9) ? GPIO_PIN_REG_9:  \
-    (i==10)? GPIO_PIN_REG_10: \
-    (i==11)? GPIO_PIN_REG_11: \
-    (i==12)? GPIO_PIN_REG_12: \
-    (i==13)? GPIO_PIN_REG_13: \
-    (i==14)? GPIO_PIN_REG_14: \
-    GPIO_PIN_REG_15
-//Address of each pin???
-#define GPIO_PIN_ADDR(i)        (GPIO_PIN0_ADDRESS + i*4)
-//Does reg_id index a pin
-#define GPIO_ID_IS_PIN_REGISTER(reg_id) \
-    ((reg_id >= GPIO_ID_PIN0) && (reg_id <= GPIO_ID_PIN(GPIO_PIN_COUNT-1)))
-//Calculate the pin id which happens to be same as pin number because GPIO_ID_PIN0 = 0
-#define GPIO_REGID_TO_PINIDX(reg_id) ((reg_id) - GPIO_ID_PIN0)
+//---Constants representing register addresses
+
+/* GPI_OUTPUT Register providing access all GPI pins
+ * 	[Mask]		[Purpose]
+ * 	0x0000FFFF	Current GPI value (pins 0 - 15)
+ * 	0xFFFF0000	BT select (Bluetooth?)
+ */
+static const uint32_t GPI_OUTPUT = 0x60000300;
+
+/*	GPI_SET Register providing set individual GPI pins
+ *	[Mask]		[Purpose]
+ *	0x0000FFFF	Setting a bit will assert the corresponding output (pins 0 - 15)
+ */
+static const uint32_t GPI_SET = 0x60000304;
+
+/*	GPI_CLEAR Register providing clear individual GPI pins
+ *	[Mask]		[Purpose]
+ *	0x0000FFFF	Setting a bit will clear the corresponding output (pins 0 - 15)
+ */
+static const uint32_t GPI_CLEAR = 0x60000308;
+
+/*	GPI_ENABLE_OUTPUT Register providing access to all GPI input / output configuration
+ *	[Mask]		[Purpose]
+ *	0x0000FFFF	Current GPI configuration for each pin (pins 0 - 15) 0=Input, 1=Output
+ */
+static const uint32_t GPI_ENABLE_OUTPUT = 0x6000030C;
+
+/*	GPI_ENABLE Register providing enable of GPI outputs
+ *	[Mask]		[Purpose]
+ *	0x0000FFFF	Setting a bit will configure the corresponding pin as output (pins 0 - 15)
+ */
+static const uint32_t GPI_CONFIGURE_OUTPUT = 0x60000300;
+
+/*	GPI_DISABLE Register providing disable of GPI outputs
+ *	[Mask]		[Purpose]
+ *	0x0000FFFF	Setting a bit will configure the corresponding pin as input (pins 0 - 15)
+ */
+static const uint32_t GPI_CONFIGURE_INPUT= 0x6000030C;
+
+/*	GPI_INPUT	Register providing current GPI input values
+*	[Mask]		[Purpose]
+*	0x0000FFFF	Current GPI input value (pins 0 - 15)
+*	0xFFFF0000	Strapping values - I think these may be related to the "pads" or pull-up resistors
+*/
+static const uint32_t GPI_INPUT = 0x60000318;
+
+/*	GPI_INT_STATUS	Register providing current GPI interrupt status
+*	[Mask]		[Purpose]
+*	0x0000FFFF	Current interrupt status (pins 0 - 15)
+*/
+static const uint32_t GPI_INT_STATUS = 0x60000324;
+
+//Input / output configuration register for each pin
+#define GPICONFIG_REG(i)	(0x60000328 + i * 4)
+
+/*	There is one configuration register per input / output pin.
+*	Each input / output pin has a register with a common set of configuration parameters:
+*		[Mask]	[Purpose]
+*		0x0001	0=GPI, 1=PWM
+*		0x0004	0=Normal, 1=Open drain
+*		0x0380	Interrupt type
+*		0x0400	Wake-up enable (only when interrupt type is LOW or HIGH)
+*		0x1800	Config ???
+*/
+static const uint32_t GPICONFIG_PWM				= 0x00000001;
+static const uint32_t GPICONFIG_OPENDRAIN		= 0x00000004;
+static const uint32_t GPICONFIG_INT_TYPE_MASK	= 0x00000380;
+static const uint32_t GPICONFIG_WAKE_ON_INT		= 0x00000400;
+static const uint32_t GPICONFIG_CONFIG_MASK		= 0x00001800;
+
+//---Enumerations of configuration options---
 
 typedef enum
 {
-    GPI_INTR_DISABLE	= 0,	//Disable interrupts
-    GPI_INTR_POSEDGE,			//Enable interrupt on rising edge
-    GPI_INTR_NEGEDGE,			//Enable interrupt on falling edge
-    GPI_INTR_ANYEGDE,			//Enable interrupt on rising and falling edges
-    GPI_INTR_LOLEVEL,			//Enable interrupt on low level
-    GPI_INTR_HILEVEL,			//Enable interrupt on high level
+    GPI_INTR_DISABLE	= 0,			//Disable interrupts
+    GPI_INTR_POSEDGE	= 0x00000080,	//Enable interrupt on rising edge
+    GPI_INTR_NEGEDGE	= 0x00000100,	//Enable interrupt on falling edge
+    GPI_INTR_ANYEGDE	= 0x00000180,	//Enable interrupt on rising and falling edges
+    GPI_INTR_LOLEVEL	= 0x00000200,	//Enable interrupt on low level
+    GPI_INTR_HILEVEL	= 0x00000280,	//Enable interrupt on high level
 } GPI_INT_TYPE;
 
 typedef enum
@@ -91,19 +100,8 @@ typedef enum
     GPI_MODE_OUTPUT_PWM,			//Delta-Sigma PWM DAC output
 } GPI_MODE_TYPE;
 
-typedef enum
-{
-    GPI_PULLUP_DIS		= 0,	//Disable internal pull-up resistor
-    GPI_PULLUP_EN				//Enable internal pull-up resistor
-} GPI_PULLUP_TYPE;
 
-typedef struct
-{
-	uint16_t			PinMask;	//Bitwise mask of which GPIO pins are affected
-    GPI_MODE_TYPE		Mode;		//Input / output mode (see GPIOMode_TypeDef)
-    GPI_PULLUP_TYPE		Pullup;		//Internal pull-up resistor state (see GPIO_Pullup_IF)
-    GPI_INT_TYPE		Interrupt;	//Interupt type (see GPIO_INT_TYPE)
-} GPI_Config;
+//---Function definitions---
 
 /** @brief  Configure the mode of a GPI pin
 *   @param  nPin Index of the GPI pin
@@ -117,7 +115,7 @@ void gpiSetMode(uint8_t nPin, GPI_MODE_TYPE nMode);
 *   @param  nType Interrupt type (see GPI_INT_TYPE)
 *   @todo   Should gpiSetInterrupt be renamed to avoid ambiguity with configuring the overall interrupt mechanism and handlers?
 */
-void gpiSetInterrupt(uint32_t nPin, GPI_INT_TYPE nType);
+void gpiSetInterrupt(uint8_t nPin, GPI_INT_TYPE nType);
 
 /** @brief  Read a GPI input value
 *   @param  nPin Index of the GPI pin
@@ -157,29 +155,36 @@ void gpiDisablePullup(uint8_t nPin);
 void gpiSetInterruptHandler(void *pFunction);
 
 /** @brief  Acknowledge interrupt
+*	@param	nPin The pin whose interrupt to acknowledge
 *	@note	Must call this function after a GPI interrupt before further GPI interrupts will occur
 */
-void gpiAckInt();
+void gpiAckInt(uint8_t nPin);
 
 /** @brief  Gets pending GPI interrupts
 *   @return <i>uint32_t</i> Bitwise mask of pending GPI interrupts
 */
 uint32_t gpiGetPendingInterrupts();
 
-/** @brief  Enable wake on a GPI interrupt
-*   @param  nPin Index of GPI pin
-*   @param  nState Interrupt state (GPI_INTR_LOLEVEL | GPI_INTR_HILEVEL)
-*   @note   Only high level and low level interrupts can be used for wakeup
+/** @brief  Enable wake-up on a GPI interrupt
+*   @param  nPin Index of GPI pin to trigger wake-up
+*   @note   Only high level and low level interrupts can be used for wake-up
 */
-void gpiEnableWakeOnInt(uint32_t nPin, GPI_INT_TYPE nState);
+void gpiEnableWakeOnInt(uint8_t nPin);
 
-/** @brief  Disable wake on GPI interrupt
+/** @brief  Disable wake-up on a GPI interrupt
+*   @param  nPin Index of GPI pin
 */
-void gpiDisableWakeOnInt();
+void gpiDisableWakeOnInt(uint8_t nPin);
 
 /**	@brief	Set the PWM output value
 *	@param  nPin Index of GPI pin
 *   @param  nFreq PWM frequency
 *   @param  nWidth PWM width
 */
-void gpiSetPwm(uint32_t nPin, uint16_t nFreq, uint8_t nWidth);
+void gpiSetPwm(uint8_t nPin, uint16_t nFreq, uint8_t nWidth);
+
+
+/**	@brief	Set the PWM period
+*	@param	nPeriod Period of PWM
+*/
+void gpiSetPwmPeriod(uint8_t nPeriod);
