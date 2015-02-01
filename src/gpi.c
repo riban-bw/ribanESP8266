@@ -10,11 +10,11 @@
 
 void ICACHE_FLASH_ATTR gpiSetMode(uint8 nPin, GPI_MODE_TYPE nMode)
 {
-    portENTER_CRITICAL();
 //    clearRegBits(IOMUX_CONFIG_REG(nPin), IOMUX_ENABLE_OUTPUT | IOMUX_ENABLE_PULLUP | IOMUX_ENABLE_PULLDOWN | GPICONFIG_PWM | GPICONFIG_OPENDRAIN);
     writeReg(IOMUX_CONFIG_REG(nPin), 0); //Reset i/o pin
+    portENTER_CRITICAL();
     clearRegBits(GPICONFIG_REG(nPin), GPICONFIG_PWM | GPICONFIG_OPENDRAIN);
-
+    portEXIT_CRITICAL();
     //Configure pin as GPI
     switch(nPin)
     {
@@ -23,11 +23,11 @@ void ICACHE_FLASH_ATTR gpiSetMode(uint8 nPin, GPI_MODE_TYPE nMode)
         case 4:
         case 5:
         	//Pins 0,2,4&5 GPI function is 0
-//            setRegBits(GPICONFIG_REG(nPin), IOMUX_CONFIG_0_GPI);
+//            setRegBits(IOMUX_CONFIG_REG(nPin), IOMUX_CONFIG_0_GPI);
             break;
         default:
         	//Pins 1,3,6,7,8,9,10,11,12,13,14,15&16 GPI function is 3
-            setRegBits(GPICONFIG_REG(nPin), IOMUX_CONFIG_1_GPI);
+            setRegBits(IOMUX_CONFIG_REG(nPin), IOMUX_CONFIG_1_GPI);
     }
     switch(nMode)
     {
@@ -41,17 +41,24 @@ void ICACHE_FLASH_ATTR gpiSetMode(uint8 nPin, GPI_MODE_TYPE nMode)
         	setRegBits(IOMUX_CONFIG_REG(nPin), IOMUX_ENABLE_PULLDOWN);
             break;
         case GPI_MODE_OUTPUT:
-        	setRegBits(GPICONFIG_REG(nPin), IOMUX_ENABLE_OUTPUT);
+        	//!@todo Can we avoid using the Espressif code to set i/o and write directly to configuration registers? Previous attempt failed.
+//        	setRegBits(IOMUX_CONFIG_REG(nPin), IOMUX_ENABLE_OUTPUT);
+        	writeReg(GPI_ENABLE_OUTPUT, BIT(nPin));
             break;
         case GPI_MODE_OUTPUT_OD:
-        	setRegBits(GPICONFIG_REG(nPin), IOMUX_ENABLE_OUTPUT | GPICONFIG_OPENDRAIN);
+        	portENTER_CRITICAL();
+        	setRegBits(GPICONFIG_REG(nPin), GPICONFIG_OPENDRAIN);
+        	portEXIT_CRITICAL();
+        	writeReg(GPI_ENABLE_OUTPUT, BIT(nPin));
             break;
         case GPI_MODE_OUTPUT_PWM:
             //!@todo Check PWM output works
-        	setRegBits(GPICONFIG_REG(nPin), IOMUX_ENABLE_OUTPUT | GPICONFIG_PWM);
+        	portENTER_CRITICAL();
+        	setRegBits(GPICONFIG_REG(nPin), GPICONFIG_PWM);
+        	portEXIT_CRITICAL();
+        	writeReg(GPI_ENABLE_OUTPUT, BIT(nPin));
             break;
     }
-    portEXIT_CRITICAL();
 }
 
 void ICACHE_FLASH_ATTR gpiSetInterrupt(uint8_t nPin, GPI_INT_TYPE nType)
@@ -69,10 +76,10 @@ bool ICACHE_FLASH_ATTR gpiRead(uint8 nPin)
 
 uint32_t ICACHE_FLASH_ATTR gpiReadAll()
 {
-    return readReg(GPI_INPUT & 0x0000FFFF);
+    return readReg(GPI_INPUT);
 }
 
-void ICACHE_FLASH_ATTR gpiWrite(uint8 nPin, bool bValue)
+void ICACHE_FLASH_ATTR gpiWrite(uint32_t nPin, bool bValue)
 {
     if(bValue)
         setRegBits(GPI_OUTPUT, BIT(nPin));

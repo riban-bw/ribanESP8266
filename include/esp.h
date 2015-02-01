@@ -129,7 +129,7 @@ const static uint32_t IOMUX_CONFIG_15_UART0RTS	= 0x0000100; //UART 0 RTS
 *	Each pin may be configured as GPI or special (pin specific) functions.
 *	Unfortunately, the function number for GPI differs on each pin (either 0 or 3).
 */
-const static uint32_t IOMUX_ENABLE_OUTPUT				= 0x00000001;
+const static uint32_t IOMUX_ENABLE_OUTPUT				= 0x00000001; //!@todo Setting this does not configure pin as output
 const static uint32_t IOMUX_ENABLE_OUTPUT_IN_SLEEP 		= 0x00000002;
 const static uint32_t IOMUX_ENABLE_PULLDOWN_IN_SLEEP	= 0x00000004;
 const static uint32_t IOMUX_ENABLE_PULLUP_IN_SLEEP		= 0x00000008;

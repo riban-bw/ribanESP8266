@@ -1,0 +1,6 @@
+eclipse.preferences.version=1
+environment/project/cdt.managedbuild.toolchain.gnu.cygwin.base.2120590147/ESP8266SDK/delimiter=;
+environment/project/cdt.managedbuild.toolchain.gnu.cygwin.base.2120590147/ESP8266SDK/operation=append
+environment/project/cdt.managedbuild.toolchain.gnu.cygwin.base.2120590147/ESP8266SDK/value=D\:\\PortableApps\\Cygwin\\home\\waltob02\\Projects\\esp_iot_rtos_sdk
+environment/project/cdt.managedbuild.toolchain.gnu.cygwin.base.2120590147/append=true
+environment/project/cdt.managedbuild.toolchain.gnu.cygwin.base.2120590147/appendContributed=true

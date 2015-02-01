@@ -47,6 +47,7 @@ docs: ./wiki/*.md
 	javadoc2markdown ./include/gpio.h > ./wiki/GPI-Documentation.md
 	javadoc2markdown ./include/uart.h > ./wiki/UART-Documentation.md
 	javadoc2markdown ./include/esp.h > ./wiki/ESP-Documentation.md
+	javadoc2markdown ./include/adc.h > ./wiki/ADC-Documentation.md
 	
 .PHONY : clean
 

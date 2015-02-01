@@ -62,7 +62,7 @@
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
 		<configuration configurationName="Default">
-			<resource resourceType="PROJECT" workspacePath="/ribanesp8266"/>
+			<resource resourceType="PROJECT" workspacePath="/ESP8266 Test"/>
 		</configuration>
 	</storageModule>
 	<storageModule moduleId="scannerConfiguration">
