@@ -42,14 +42,14 @@ $(OBJDIR):
 	mkdir -p ./lib
 
 #Rule to create wiki documentation from javadoc comments
-docs: ./wiki/*.md
+docs:
 #	javadoc2markdown $< > ./wiki/`basename -s .h $< | tr '[a-z]' '[A-Z]'`-Documentation.md 
-	javadoc2markdown ./include/gpio.h > ./wiki/GPI-Documentation.md
+	javadoc2markdown ./include/gpi.h > ./wiki/GPI-Documentation.md
 	javadoc2markdown ./include/uart.h > ./wiki/UART-Documentation.md
 	javadoc2markdown ./include/esp.h > ./wiki/ESP-Documentation.md
 	javadoc2markdown ./include/adc.h > ./wiki/ADC-Documentation.md
 	
-.PHONY : clean
+.PHONY : clean docs
 
 #Rule to clean (remove) object directory
 clean:

@@ -10,25 +10,25 @@
 
 //---Constants representing register addresses
 
-/* GPI_OUTPUT Register providing parallel access all GPI pins
+/* GPI_OUTPUT Register providing parallel access all GPI output pins
 *	Access: R/W
 * 	[Mask]		[Purpose]
 * 	0x0000FFFF	Current GPI value (pins 0 - 15)
-* 	0xFFFF0000	BT select (Bluetooth?)
+* 	0xFFFF0000	BT select ???
 */
 static const uint32_t GPI_OUTPUT = 0x60000300;
 
-/*	GPI_SET Register providing set individual GPI pins
+/*	GPI_SET Register allows setting of individual GPI pins
 *	Access: WO
 *	[Mask]		[Purpose]
-*	0x0000FFFF	Setting a bit will assert the corresponding output (pins 0 - 15)
+*	0x0000FFFF	Setting a bit will assert the corresponding output (pins 0 - 15) but not affect other pins
 */
 static const uint32_t GPI_SET = 0x60000304;
 
-/*	GPI_CLEAR Register providing clear individual GPI pins
+/*	GPI_CLEAR Register allows clearing of individual GPI pins
 *	Access: WO
 *	[Mask]		[Purpose]
-*	0x0000FFFF	Setting a bit will clear the corresponding output (pins 0 - 15)
+*	0x0000FFFF	Setting a bit will clear the corresponding output (pins 0 - 15) but not affect other pins
 */
 static const uint32_t GPI_CLEAR = 0x60000308;
 
@@ -36,22 +36,23 @@ static const uint32_t GPI_CLEAR = 0x60000308;
 *	Access: R/W
 *	[Mask]		[Purpose]
 *	0x0000FFFF	Current GPI configuration for each pin (pins 0 - 15) 0=Input, 1=Output
+*	0x003F0000	SDIO select ????
 */
 static const uint32_t GPI_ENABLE_INPUT_OUTPUT = 0x6000030C;
 
-/*	GPI_DISABLE Register providing disable of GPI outputs
+/*	GPI_ENABLE_OUTPUT Register allows configuration of each pin as an output
 *	Access: WO
 *	[Mask]		[Purpose]
-*	0x0000FFFF	Setting a bit will configure the corresponding pin as input (pins 0 - 15)
-*/
-static const uint32_t GPI_CONFIGURE_INPUT= 0x6000030C;
-
-/*	GPI_ENABLE_OUTPUT Register provides ability to enable each pin as an output
-*	Access: WO
-*	[Mask]		[Purpose]
-*	0x0000FFFF	Setting a bit will configure the corresponding pin as output (pins 0 - 15)
+*	0x0000FFFF	Setting a bit will configure the corresponding pin as output (pins 0 - 15) but not affect other pins
 */
 static const uint32_t GPI_ENABLE_OUTPUT = 0x60000310;
+
+/*	GPI_ENABLE_INPUT Register allows configuration of each pin as an input
+*	Access: WO
+*	[Mask]		[Purpose]
+*	0x0000FFFF	Setting a bit will configure the corresponding pin as input (pins 0 - 15) but not affect other pins
+*/
+static const uint32_t GPI_ENABLE_INPUT= 0x60000314;
 
 /*	GPI_INPUT	Register providing current GPI input values
 *	Access: RO
@@ -61,11 +62,24 @@ static const uint32_t GPI_ENABLE_OUTPUT = 0x60000310;
 */
 static const uint32_t GPI_INPUT = 0x60000318;
 
-/*	GPI_INT_STATUS	Register providing current GPI interrupt status
+/*	GPIINTR_STATUS	Register providing current GPI interrupt status
 *	[Mask]		[Purpose]
 *	0x0000FFFF	Current interrupt status (pins 0 - 15)
 */
-static const uint32_t GPI_INT_STATUS = 0x60000324;
+static const uint32_t GPIINTR_STATUS = 0x6000031c;
+
+/*	GPIINTR_SET Register providing set of GPI interrupts
+*	[Mask]		[Purpose]
+*	0x0000FFFF	Set GPI interrupt (pins 0 - 15) but not affect other pins
+*	I don't know what use this would be!
+*/
+static const uint32_t GPIINTR_SET = 0x60000320;
+
+/*	GPIINTR_ACK Register providing reset or acknowledge of GPI interrupts
+*	[Mask]		[Purpose]
+*	0x0000FFFF	Acknowledge GPI interrupt (pins 0 - 15) but not affect other pins
+*/
+static const uint32_t GPIINTR_ACK = 0x60000324;
 
 //	There is one configuration register per input / output pin.
 //	Macro providing input / output configuration register for each pin
@@ -76,6 +90,33 @@ static const uint32_t GPICONFIG_OPENDRAIN		= 0x00000004; //Set for open drain ou
 static const uint32_t GPICONFIG_INT_TYPE_MASK	= 0x00000380; //See GPI_INT_TYPE for interrupt types
 static const uint32_t GPICONFIG_WAKE_ON_INT		= 0x00000400; //Set to enable wake-up on interrupt (only when interrupt type is GPI_INTR_LOLEVEL or GPI_INTR_HILEVEL)
 static const uint32_t GPICONFIG_CONFIG_MASK		= 0x00001800; //Unknown configuration bits
+
+//	GPI16 is different
+static const uint32_t GPI16_OUT					= 0x60000768; //Register to set GPI 16 output (bit 0)
+static const uint32_t GPI16_ENABLE				= 0x60000774; //Register to enable GPI 16 output (bit 0: 0=input, 1=output)
+static const uint32_t GPI16_IN					= 0x6000078C; //Register to read GPI 16 input (bit 0)
+static const uint32_t GPI16_CONF				= 0x60000790; //Register to configure GPI 16 (set bit 1 for GPI)
+
+//	PWM Sigma-Delta configuration
+/*	GPIPWM_CONF Register providing configuration of PWM
+*	[Mask]		[Purpose]
+*	0x000000FF	Target pin (0 - 15)
+*	0x0000FF00	Pre-scaler
+*	0x00010000	Global PWM enable
+*/
+static const uint32_t GPIPWM_CONF = 0x60000368;
+static const uint32_t GPIPWM_ENABLE	= 0x00010000;
+
+//	RTC calibration configuration
+/*	GPIRTC_SYNC Register providing configuration of RTC sync
+*	[Mask]		[Purpose]
+*	0x000003FF	Period
+*	0x10000000	Start
+*/
+static const uint32_t GPIRTC_SYNC			= 0x6000036C;
+static const uint32_t GPIRTC_PERIOD_MASK	= 0x000003FF;
+static const uint32_t GPIRTC_START			= 0x10000000;
+
 
 //---Enumerations of configuration options---
 typedef enum
@@ -105,13 +146,15 @@ typedef enum
 *   @param  nPin Index of the GPI pin
 *   @param  nMode Mode to set (see GPI_MODE_TYPE)
 *   @todo	GPI_MODE_INPUT_PULLDOWN does not work. Reported to Espressif on github issue #16
+*   @note	GPI16 only supports GPI_MODE_INPUT and GPI_MODE_OUTPUT
 */
 void gpiSetMode(uint8_t nPin, GPI_MODE_TYPE nMode);
 
 /** @brief  Set the interrupt type for a GPI pin
-*   @param  nPin GPI pin to configure
+*   @param  nPin GPI pin to configure (0 - 15)
 *   @param  nType Interrupt type (see GPI_INT_TYPE)
-*   @todo   Should gpiSetInterrupt be renamed to avoid ambiguity with configuring the overall interrupt mechanism and handlers?
+*   @note	This function also enables GPI interrupts globally (see enableInterrupts)
+*   @note	Interrupts are not supported on GPI 16
 */
 void gpiSetInterrupt(uint8_t nPin, GPI_INT_TYPE nType);
 
@@ -148,7 +191,8 @@ void gpiDisablePullup(uint8_t nPin);
 /** @brief  Register an event handler for GPI interrupts
 *   @param  pFunction Pointer to the event handler (callback) function
 *   @note   Each interrupt must be acknowledged by calling gpiAckInt. No further events will be generated until this is done.
-*   @note   Handler accepts one argument: uint32_t which is a bitwise mask of pending GPI interrupts (one bit per pin)
+*   @note   Handler function has no parameters: void onGpiInt(); Use gpiGetTriggeredInterrupts to identify which interrupts have triggered.
+*   @note	Call gpiAckInt to acknowledge interrupts
 */
 void gpiSetInterruptHandler(void *pFunction);
 
@@ -156,12 +200,12 @@ void gpiSetInterruptHandler(void *pFunction);
 *	@param	nPin The pin whose interrupt to acknowledge
 *	@note	Must call this function after a GPI interrupt before further GPI interrupts will occur
 */
-void gpiAckInt(uint8_t nPin);
+void gpiAckIntr(uint8_t nPin);
 
-/** @brief  Gets pending GPI interrupts
-*   @return <i>uint32_t</i> Bitwise mask of pending GPI interrupts
+/** @brief  Gets triggered GPI interrupts
+*   @return <i>uint32_t</i> Bitwise mask of pending GPI interrupts (pins 0 - 15)
 */
-uint32_t gpiGetPendingInterrupts();
+uint32_t gpiGetTriggeredInterrupts();
 
 /** @brief  Enable wake-up on a GPI interrupt
 *   @param  nPin Index of GPI pin to trigger wake-up
@@ -174,15 +218,16 @@ void gpiEnableWakeOnInt(uint8_t nPin);
 */
 void gpiDisableWakeOnInt(uint8_t nPin);
 
-/**	@brief	Set the PWM output value
-*	@param  nPin Index of GPI pin
-*   @param  nFreq PWM frequency
-*   @param  nWidth PWM width
-*/
-void gpiSetPwm(uint8_t nPin, uint16_t nFreq, uint8_t nWidth);
-
-
 /**	@brief	Set the PWM period
+*	@param	nPin GPI pin
 *	@param	nPeriod Period of PWM
 */
-void gpiSetPwmPeriod(uint8_t nPeriod);
+void gpiSetPwmPeriod(uint8_t nPin, uint8_t nPeriod);
+
+/**	@brief	Global enable of PWM
+*/
+void gpiEnablePwm();
+
+/**	@brief	Global disable of PWM
+*/
+void gpiDisablePwm();

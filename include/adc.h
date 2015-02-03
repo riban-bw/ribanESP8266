@@ -9,4 +9,4 @@
 /** @brief  Get the analogue input value
 *	@return	<i>uint32_t</i> Analogue value 0 - 1024 (0V - 3.3V)
 */
-#define adcRead(i) system_adc_read(i)
+#define adcRead system_adc_read

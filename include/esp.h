@@ -5,6 +5,8 @@
 */
 #pragma once
 
+#include "esp8266/ets_sys.h" //Provides interrupt types
+
 /*	Input and output pins may be configured for different functions
 *	The following constants define the configuration register for each
 */
@@ -24,6 +26,7 @@ const static uint32_t IOMUX_CONFIG_REG_12	= 0x60000804; //MTDI, I2SI Data,HSPI M
 const static uint32_t IOMUX_CONFIG_REG_13	= 0x60000808; //MTCK, I2SI_BCK, HSPID_MOSI, GPI13, UART0 CTS
 const static uint32_t IOMUX_CONFIG_REG_14	= 0x6000080C; //MTMS, I2SI_WS, HSPI_CLK, GPI14, UART0 DSR
 const static uint32_t IOMUX_CONFIG_REG_15	= 0x60000810; //MTDO, I2SO_BCK, HSPI_CS0, GPI15, UART0 RTS
+const static uint32_t IOMUX_CONFIG_REG_16	= 0x600007A0; //GPI16, PAD, XPD, DCDC (deep sleep wake-up)
 
 const static uint32_t IOMUX_CONFIG_0_GPI		= 0x00000000; //GPI 0
 const static uint32_t IOMUX_CONFIG_0_SPICS2		= 0x00000010; //SPI Chip select 2
@@ -80,29 +83,33 @@ const static uint32_t IOMUX_CONFIG_11_SPICS0	= 0x00000010; //SPI Chip select 0
 const static uint32_t IOMUX_CONFIG_11_GPI		= 0x00000030; //GPI 11
 const static uint32_t IOMUX_CONFIG_11_UART1RTS	= 0x00000100; //UART 1 RTS
 
-const static uint32_t IOMUX_CONFIG_12_MTDI		= 0x0000000; //MT digital input
-const static uint32_t IOMUX_CONFIG_12_I2S1DATA	= 0x0000010; //I2S input data
-const static uint32_t IOMUX_CONFIG_12_HSPIMISO	= 0x0000020; //SPI host (slave) MISO
-const static uint32_t IOMUX_CONFIG_12_GPI		= 0x0000030; //GPI 12
-const static uint32_t IOMUX_CONFIG_12_UART0DTR	= 0x0000100; //UART 0 DTR
+const static uint32_t IOMUX_CONFIG_12_MTDI		= 0x00000000; //MT digital input
+const static uint32_t IOMUX_CONFIG_12_I2S1DATA	= 0x00000010; //I2S input data
+const static uint32_t IOMUX_CONFIG_12_HSPIMISO	= 0x00000020; //SPI host (slave) MISO
+const static uint32_t IOMUX_CONFIG_12_GPI		= 0x00000030; //GPI 12
+const static uint32_t IOMUX_CONFIG_12_UART0DTR	= 0x00000100; //UART 0 DTR
 
-const static uint32_t IOMUX_CONFIG_13_MTCK		= 0x0000000; //MT clock
-const static uint32_t IOMUX_CONFIG_13_I2SIBCK	= 0x0000010; //I2S input bit clock
-const static uint32_t IOMUX_CONFIG_13_HSPIDMOSI	= 0x0000020; //SPI host (slave) MOSI
-const static uint32_t IOMUX_CONFIG_13_GPI		= 0x0000030; //GPI 13
-const static uint32_t IOMUX_CONFIG_13_UART0CTS	= 0x0000100; //UART 0 CTS
+const static uint32_t IOMUX_CONFIG_13_MTCK		= 0x00000000; //MT clock
+const static uint32_t IOMUX_CONFIG_13_I2SIBCK	= 0x00000010; //I2S input bit clock
+const static uint32_t IOMUX_CONFIG_13_HSPIDMOSI	= 0x00000020; //SPI host (slave) MOSI
+const static uint32_t IOMUX_CONFIG_13_GPI		= 0x00000030; //GPI 13
+const static uint32_t IOMUX_CONFIG_13_UART0CTS	= 0x00000100; //UART 0 CTS
 
-const static uint32_t IOMUX_CONFIG_14_MTMS		= 0x0000000; //MT MS???
-const static uint32_t IOMUX_CONFIG_14_I2SIWS	= 0x0000010; //I2S input word select
-const static uint32_t IOMUX_CONFIG_14_HSPICLK	= 0x0000020; //SPI host (slave) clock
-const static uint32_t IOMUX_CONFIG_14_GPI		= 0x0000030; //GPI 14
-const static uint32_t IOMUX_CONFIG_14_UART0DSR	= 0x0000100; //UART 0 DSR
+const static uint32_t IOMUX_CONFIG_14_MTMS		= 0x00000000; //MT MS???
+const static uint32_t IOMUX_CONFIG_14_I2SIWS	= 0x00000010; //I2S input word select
+const static uint32_t IOMUX_CONFIG_14_HSPICLK	= 0x00000020; //SPI host (slave) clock
+const static uint32_t IOMUX_CONFIG_14_GPI		= 0x00000030; //GPI 14
+const static uint32_t IOMUX_CONFIG_14_UART0DSR	= 0x00000100; //UART 0 DSR
 
-const static uint32_t IOMUX_CONFIG_15_MTDO		= 0x0000000; //MT digital output
-const static uint32_t IOMUX_CONFIG_15_I2SOBCK	= 0x0000010; //I2S output bit clock
-const static uint32_t IOMUX_CONFIG_15_HSPI_CS0	= 0x0000020; //SPI host (slave) chip select 0
-const static uint32_t IOMUX_CONFIG_15_GPI		= 0x0000030; //GPI 15
-const static uint32_t IOMUX_CONFIG_15_UART0RTS	= 0x0000100; //UART 0 RTS
+const static uint32_t IOMUX_CONFIG_15_MTDO		= 0x00000000; //MT digital output
+const static uint32_t IOMUX_CONFIG_15_I2SOBCK	= 0x00000010; //I2S output bit clock
+const static uint32_t IOMUX_CONFIG_15_HSPI_CS0	= 0x00000020; //SPI host (slave) chip select 0
+const static uint32_t IOMUX_CONFIG_15_GPI		= 0x00000030; //GPI 15
+const static uint32_t IOMUX_CONFIG_15_UART0RTS	= 0x00000100; //UART 0 RTS
+
+const static uint32_t IOMUX_CONFIG_16_MASK		= 0x00000045; //Mask of bits used to configure i/o16 mux
+const static uint32_t IOMUX_CONFIG_16_SLEEPWAKE	= 0x00000000; //Deep sleep wake?
+const static uint32_t IOMUX_CONFIG_16_GPI		= 0x00000001; //GPI 16
 
 //Input / output multiplexer configuration register from pin (i = 0..15)
 #define IOMUX_CONFIG_REG(i) 			\
@@ -141,6 +148,22 @@ const static uint32_t IOMUX_CONFIG_REG_SPICLK			= 0x60000800;
 const static uint32_t IOMUX_SPI0_AT_SYSCLK				= 0x00000100;
 const static uint32_t IOMUX_SPI1_AT_SYSCLK				= 0x00000200;
 
+//---Enumerations of configuration options---
+
+//Interrupt types
+typedef enum
+{
+    INTR_TYPE_SPI		= ETS_SPI_INUM,			//SPI interrupt
+    INTR_TYPE_GPI		= ETS_GPIO_INUM,		//GPI interrupt
+    INTR_TYPE_UART		= ETS_UART_INUM,		//UART interrupt
+    INTR_TYPE_MAX		= ETS_MAX_INUM,			//MAX interrupt
+    INTR_TYPE_SOFT		= ETS_SOFT_INUM,		//SOFT interrupt
+    INTR_TYPE_WDT		= ETS_WDT_INUM,			//Watchdog timer interrupt
+    INTR_TYPE_FRCTIMER1	= ETS_FRC_TIMER1_INUM,	//FRC interrupt
+} INTR_TYPE;
+
+//--- Function definition---
+
 /** @brief  Read from a register
 *   @param  nRegister The register to read
 *   @return <i>uint32_t</i> Value read from register
@@ -173,6 +196,7 @@ void setRegBits(uint32_t nRegister, uint32_t nMask);
 *	@param	nMask Bitwise mask of the bits to modify, right justified, i.e. presented as LSBs
 *	@param	nShift How far left to shift the mask and value
 *	@note	This function takes a value, shifts it by a specified number of bits and sets that range within a register
+*	@todo	setRegBitsShifted is implemented to use the Espressif method of defining register content. Will not be required when bitmaps are defined for each register.
 */
 void setRegBitsShifted(uint32_t nRegister, uint32_t nValue, uint32_t nMask, uint8_t nShift);
 
@@ -192,7 +216,7 @@ uint32_t getRegBitsShifted(uint32_t nRegister, uint32_t nMask, uint8_t nShift);
 void setPinFunction(uint8_t nPin, uint32_t nFunction);
 
 /** @brief	Enable interrupts
-*	@param	nType The interrupt type to enable
+*	@param	nType The interrupt type to enable (see INTR_TYPE)
 */
 void enableInterrupts(uint8_t nType);
 
