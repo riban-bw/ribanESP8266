@@ -219,10 +219,14 @@ void gpiEnableWakeOnInt(uint8_t nPin);
 void gpiDisableWakeOnInt(uint8_t nPin);
 
 /**	@brief	Set the PWM period
-*	@param	nPin GPI pin
 *	@param	nPeriod Period of PWM
 */
-void gpiSetPwmPeriod(uint8_t nPin, uint8_t nPeriod);
+void gpiSetPwmPeriod(uint8_t nPeriod);
+
+/**	@brief	Write the value of the sigma delta PWM
+*	@param	nValue PWM intensity
+*/
+void gpiWritePwm(uint8_t nValue);
 
 /**	@brief	Global enable of PWM
 */

@@ -174,10 +174,14 @@ void ICACHE_FLASH_ATTR gpiDisablePullup(uint8_t nPin)
     clearRegBits(IOMUX_CONFIG_REG(nPin), IOMUX_ENABLE_PULLUP);
 }
 
-void ICACHE_FLASH_ATTR gpiSetPwmPeriod(uint8_t nPin, uint8_t nPeriod)
+void ICACHE_FLASH_ATTR gpiSetPwmPeriod(uint8_t nPeriod)
 {
-	//!@todo gpiSetPwmPeriod needs some revision - partially works
-	writeReg(GPIPWM_CONF, nPin | (nPeriod << 8) | GPIPWM_ENABLE);
+	writeReg(GPIPWM_CONF, (nPeriod << 8));
+}
+
+void ICACHE_FLASH_ATTR gpiWritePwm(uint8_t nValue)
+{
+	writeReg(GPIPWM_CONF, nValue | GPIPWM_ENABLE);
 }
 
 void ICACHE_FLASH_ATTR gpiEnablePwm()

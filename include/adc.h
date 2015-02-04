@@ -6,7 +6,11 @@
 
 #pragma once
 
-/** @brief  Get the analogue input value
-*	@return	<i>uint32_t</i> Analogue value 0 - 1024 (0V - 3.3V)
-*/
+#include "c_types.h"
+
 #define adcRead system_adc_read
+
+/** @brief  Get the analogue input value
+*	@return	<i>uint32_t</i> Analogue value 0 - 1024 (0V - 1V)
+*/
+uint32_t adcRead();
