@@ -224,3 +224,9 @@ void enableInterrupts(uint8_t nType);
 *	@param	nType The interrupt type to disable
 */
 void disableInterrupts(uint8_t nType);
+
+#define usleep os_delay_us
+/**	@brief	Delay processing
+*	@param	nDelay Quantity of microseconds to delay
+*/
+void usleep(uint16_t nDelay);

@@ -16,7 +16,7 @@ LDIR=$(ESPSDK)/lib
 LIBS=-lfreertos
 
 #Define each object to be created
-OBJS := $(addprefix $(OBJDIR)/,esp.o gpi.o uart.o)
+OBJS := $(addprefix $(OBJDIR)/,esp.o gpi.o uart.o onewire.o)
 
 #Define compiler and linker flags
 INCLUDES = -I./include -I$(ESPSDK)/include -I$(ESPSDK)/include/espressif -I$(ESPSDK)/include/lwip -I$(ESPSDK)/include/lwip/ipv4 -I$(ESPSDK)/include/lwip/ipv6 -I$(ESPSDK)/extra_include -I$(ESPSDK)/include/freertos/
@@ -48,6 +48,7 @@ docs:
 	javadoc2markdown ./include/uart.h > ./wiki/UART-Documentation.md
 	javadoc2markdown ./include/esp.h > ./wiki/ESP-Documentation.md
 	javadoc2markdown ./include/adc.h > ./wiki/ADC-Documentation.md
+	javadoc2markdown ./include/onewire.h > ./wiki/Onewire-Documentation.md
 	
 .PHONY : clean docs
 
