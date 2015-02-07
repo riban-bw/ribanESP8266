@@ -28,5 +28,5 @@ This library provides simple access to each element of the hardware:
  * Sleep
  * Wakeup
  * On
- * 
- Note: Not all functions are currently implemented. Check wiki [Roadmap] (https://github.com/riban-bw/ribanESP8266/wiki/Roadmap) for details.
+
+Note: Not all functions are currently implemented. Check wiki [Roadmap](https://github.com/riban-bw/ribanESP8266/wiki/Roadmap) for details.
